@@ -1,20 +1,26 @@
-const express = require('express');
-const session = require('express-session');
-const jwt = require('jsonwebtoken');
-const bodyParser = require('body-parser');
-const multer = require('multer');
-const cors = require('cors');
-require('dotenv').config();
+import  express from 'express';
+import  session from 'express-session';
+import  jwt from 'jsonwebtoken';
+import  bodyParser from 'body-parser';
+import  multer from 'multer';
+import  cors from 'cors';
+import { api } from "./convex/_generated/api.js";
+import * as dotenv from "dotenv";
+import validator from 'validator'
+import bcrypt from 'bcrypt'
+import fs from 'fs/promises';
+import routes from './routes/index.js'
+import client from './utils/convexHook.js';
 
-const { createClient } = require('@supabase/supabase-js');
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_KEY
-// Supabase configuration
-const supabase = createClient(supabaseUrl, supabaseKey);
+dotenv.config({ path: ".env.local" });
+dotenv.config()
 
 const app = express();
 app.use(cors())
 const port = 3000;
+// Middleware for parsing JSON data
+app.use(express.json());
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -25,103 +31,26 @@ app.use(
 // Middleware for parsing JSON bodies
 app.use(bodyParser.json());
 
-// Clerk middleware to verify tokens
-// app.use(ClerkExpressWithAuth({
-//   audience: 'your-clerk-audience-id',
-//   issuer: 'your-clerk-issuer-id'
-// }));
+// hash password
+const hashPassword = async (plainPassword) => {
+  const saltRounds = 10;
+  return await bcrypt.hash(plainPassword, saltRounds);
+};
 
-// '/' route to check for token validity
-app.get('/', (req, res) => {
-  // if (req.auth) {
-  //   res.send('Token is valid');
-  // } else {
-  //   res.status(401).send('Invalid token');
-  // }
-  console.log('triggerd')
-  res.json({'success': 200})
-});
-app.post('/admins', async (req, res)=>{
-  console.log(req.body)
-  res.status(200)
-  // signin
-const { data, error } = await supabase.auth.signInWithPassword({
-    email: req.body.email,
-    password: req.body.password,
-})
+const checkSession = (req, res, next) => {
+  const token_set = req.body.headers.Authorization
+  const token = token_set.split('"')
+  
+  try {
+    const decoded = jwt.verify(token[1], process.env.SESSION_SECRET);
+    // console.log(decoded)  
+    next()  
+  } catch (err) {
+    console.log(err.name)
+    res.status(401).json({ message: 'Invalid token' , name: err.name, err});
+  }
+};
 
-
-// app.get('/', (req, res) => {
-//   const token = req.cookies.jwt;
-//   if (!token) {
-//     return res.status(401).json({ message: 'Not authenticated' });
-//   }
-// 
-//   try {
-//     const decoded = jwt.verify(token, process.env.SESSION_SECRET);
-//     res.status(200).json({ message: `Hello, user with email: ${decoded.email}` });
-//   } catch (err) {
-//     res.status(401).json({ message: 'Invalid token' });
-//   }
-// });
-// 
-
-// app.post('/login', async (req, res) => {
-//   const { email, password } = req.body;
-//   const { session, error } = await supabase.auth.signIn({ email, password });
-// 
-//   if (error) {
-//     return res.status(400).json({ error: error.message });
-//   }
-// 
-//   const token = jwt.sign({ user_id: session.user.id, email: session.user.email }, process.env.SESSION_SECRET, {
-//     expiresIn: '1h'
-//   });
-// 
-//   res.cookie('jwt', token, { httpOnly: true });
-//   res.status(200).json({ message: 'Login successful', token });
-// });
-// 
-// app.post('/logout', (req, res) => {
-//   res.clearCookie('jwt');
-//   res.status(200).json({ message: 'Logout successful' });
-// });
-
-// app.post('/signup', async (req, res) => {
-//   const { email, password } = req.body;
-//   const { user, error } = await supabase.auth.signUp({ email, password });
-// 
-//   if (error) {
-//     return res.status(400).json({ error: error.message });
-//   }
-// 
-//   res.status(200).json({ message: 'User signed up successfully', user });
-// });
-
-
-
-
-
-
-  // // new password mail
-
-// const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-//   redirectTo: 'https://example.com/update-password',
-// })
-
-  // set new password
-//   const { data, error } = await supabase.auth.updateUser({
-//   password: new_password
-// })
-
-  // create new admin
-  // const { data, error } = await supabase.auth.signUp({
-  //   email: req.body.email,
-  //   password: req.body.password,
-  // })
-  console.log(data)
-  res.send(data)
-})
 // '/profile' route to get data
 app.get('/profile', (req, res) => {
   if (!req.auth) {
@@ -136,20 +65,16 @@ app.get('/profile', (req, res) => {
   res.json(profileData);
 });
 
-// Multer setup for file uploads
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 
-let uploadedImages = [];
+// API Routes
+app.use('/api', routes);
 
-// '/gallery' route to receive images
-app.post('/gallery', upload.array('images'), (req, res) => {
-  if (!req.auth) {
-    return res.status(401).send('Unauthorized');
-  }
+// Health check route
+app.get('/health', (req, res) => res.send('API is healthy'));
 
-  uploadedImages = req.files;
-  res.send('Images received');
+// 404 Handler
+app.use((req, res, next) => {
+  res.status(404).json({ error: 'Not Found' });
 });
 
 app.listen(port, () => {
