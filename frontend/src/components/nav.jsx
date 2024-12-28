@@ -9,14 +9,14 @@ import { UserContext } from '../lib/userContext'
 // 9DB2BF
 // DDE6ED
 
-function Nav({mobile, handleMobile}) {
+function Nav({ mobile, handleMobile }) {
 	const url = import.meta.env.VITE_HOME;
 	const { user, setUser } = useContext(UserContext)
 	const location = useLocation()
 	const path = location.pathname;
 	// const [mobile, setMobile] = useState(false)
 	// console.log(path)
-	const logout = ()=>{
+	const logout = () => {
 		// try{
 		// 	const response 
 		// }catch(error){
@@ -36,31 +36,31 @@ function Nav({mobile, handleMobile}) {
 
 				<div className='text-left font-serif px-8 my-4'>
 					<ul className='hidden md:flex flex-col gap-2 text-base'>
-						<Link to='/'><li className={`${link} ${(path === '/') && 'bg-blue-400'}`}>Home</li><hr/></Link>
+						<Link to='/'><li className={`${link} ${(path === '/') && 'bg-blue-400'}`}>Home</li><hr /></Link>
 						{
 							user && (
 								<>
-									<Link to='/carousel'><li className={`${link} ${(path === '/carousel') && 'bg-blue-400'}`}>Carousel</li><hr/></Link>
-									<Link to='/about'><li className={`${link} ${(path === '/about') && 'bg-blue-400'}`}>About</li><hr/></Link>
-									<Link to='/gallery'><li className={`${link} ${(path === '/gallery') && 'bg-blue-400'}`}>Gallery</li><hr/></Link>
-									<Link to='/account'><li className={`${link} ${(path === '/account') && 'bg-blue-400'}`}>Payment</li><hr/></Link>
-									<Link to='/admins'><li className={`${link} ${(path === '/admins') && 'bg-blue-400'}`}>Admins</li><hr/></Link>
+									<Link to='/carousel'><li className={`${link} ${(path === '/carousel') && 'bg-blue-400'}`}>Carousel</li><hr /></Link>
+									<Link to='/about'><li className={`${link} ${(path === '/about') && 'bg-blue-400'}`}>About</li><hr /></Link>
+									<Link to='/gallery'><li className={`${link} ${(path === '/gallery') && 'bg-blue-400'}`}>Gallery</li><hr /></Link>
+									<Link to='/account'><li className={`${link} ${(path === '/account') && 'bg-blue-400'}`}>Payment</li><hr /></Link>
+									<Link to='/admins'><li className={`${link} ${(path === '/admins') && 'bg-blue-400'}`}>Admins</li><hr /></Link>
 								</>
-								)
+							)
 						}
 					</ul>
 					<ul className='flex flex-col md:hidden gap-2 text-base'>
-						<Link to='/'><li onClick={handleMobile} className={`${link} ${(path === '/') && 'bg-blue-400'}`}>Home</li><hr/></Link>
+						<Link to='/'><li onClick={handleMobile} className={`${link} ${(path === '/') && 'bg-blue-400'}`}>Home</li><hr /></Link>
 						{
 							user && (
 								<>
-									<Link to='/carousel'><li onClick={handleMobile} className={`${link} ${(path === '/carousel') && 'bg-blue-400'}`}>Carousel</li><hr/></Link>
-									<Link to='/about'><li onClick={handleMobile} className={`${link} ${(path === '/about') && 'bg-blue-400'}`}>About</li><hr/></Link>
-									<Link to='/gallery'><li onClick={handleMobile} className={`${link} ${(path === '/gallery') && 'bg-blue-400'}`}>Gallery</li><hr/></Link>
-									<Link to='/account'><li onClick={handleMobile} className={`${link} ${(path === '/account') && 'bg-blue-400'}`}>Payment</li><hr/></Link>
-									<Link to='/admins'><li onClick={handleMobile} className={`${link} ${(path === '/admins') && 'bg-blue-400'}`}>Admins</li><hr/></Link>
+									<Link to='/carousel'><li onClick={handleMobile} className={`${link} ${(path === '/carousel') && 'bg-blue-400'}`}>Carousel</li><hr /></Link>
+									<Link to='/about'><li onClick={handleMobile} className={`${link} ${(path === '/about') && 'bg-blue-400'}`}>About</li><hr /></Link>
+									<Link to='/gallery'><li onClick={handleMobile} className={`${link} ${(path === '/gallery') && 'bg-blue-400'}`}>Gallery</li><hr /></Link>
+									<Link to='/account'><li onClick={handleMobile} className={`${link} ${(path === '/account') && 'bg-blue-400'}`}>Payment</li><hr /></Link>
+									<Link to='/admins'><li onClick={handleMobile} className={`${link} ${(path === '/admins') && 'bg-blue-400'}`}>Admins</li><hr /></Link>
 								</>
-								)
+							)
 						}
 					</ul>
 				</div>

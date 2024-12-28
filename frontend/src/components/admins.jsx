@@ -70,8 +70,10 @@ function Admins() {
   }
 
   const handleEdit = async (id) =>{
-  	wait().then(() => setEdit(false));
-  	// e.preventDefault()
+  	e.preventDefault()
+  	toast({
+			title: 'Loading...',
+		})
   	// console.log(newEmail, newUsername)
   	// console.log(currentId)
   	const data = {}

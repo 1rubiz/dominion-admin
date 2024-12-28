@@ -1,5 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { useEffect, useContext} from 'react'
+import { useEffect, useContext } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../lib/userContext'
@@ -9,29 +9,29 @@ function Landing() {
 	// console.log(user)
 	const navigate = useNavigate()
 	useEffect(() => {
-    const getData = async ()=>{
-    	const apiUrl = import.meta.env.VITE_API_URL;
-    	console.log(user)
-      	try{
-      		const response = await axios.get(`${apiUrl}getToken`)
-	      	console.log(response)
-	      	sessionStorage.setItem('token', JSON.stringify(response.data.token))
-	      	setUser(true) 
-	    }catch(error){
-	    	if(error.response.status === 401){
-	    		setUser(false)
-	    		navigate('redirect')
-	    	}
-	    	console.log(error)
-	    }
-    }
-    const userSession = sessionStorage.getItem('token')
-    if(!userSession){
-    	getData()
-    }else{
-    	setUser(true)
-    }
-  }, [])
+		const getData = async () => {
+			const apiUrl = import.meta.env.VITE_API_URL;
+			console.log(user)
+			try {
+				const response = await axios.get(`${apiUrl}api/admins/validate`)
+				console.log(response)
+				sessionStorage.setItem('token', JSON.stringify(response.data.token))
+				setUser(true) 
+			} catch (error) {
+				if (error.response.status === 401) {
+					setUser(false)
+					navigate('redirect')
+				}
+				console.log(error)
+			}
+		}
+		const userSession = sessionStorage.getItem('token')
+		if (!userSession) {
+			getData()
+		} else {
+			setUser(true)
+		}
+	}, [])
 
 	return (
 		<div className='w-full h-full flex items-center justify-center text-center'>
