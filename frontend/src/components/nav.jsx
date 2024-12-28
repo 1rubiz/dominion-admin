@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Button } from "@/components/ui/button"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useLocation } from 'react-router-dom'
 import { UserContext } from '../lib/userContext'
@@ -11,7 +11,13 @@ import { UserContext } from '../lib/userContext'
 
 function Nav({ mobile, handleMobile }) {
 	const url = import.meta.env.VITE_HOME;
+	const navigate = useNavigate()
 	const { user, setUser } = useContext(UserContext)
+	useEffect(() => {
+		if (!user) {
+			navigate('/')
+		}
+	})
 	const location = useLocation()
 	const path = location.pathname;
 	// const [mobile, setMobile] = useState(false)

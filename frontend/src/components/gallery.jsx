@@ -357,7 +357,7 @@ function Gallery() {
 						)
 					}
 				</div>
-				<Card className='flex justify-center items-center md:w-[400px] min-h-[300px]'>
+				<Card className='flex justify-center items-center w-full md:w-[400px] min-h-[300px]'>
 					<CardContent className='mt-6'>
 						<img src={currentImg} className='h-[30svh] object-contain' />
 						<div className='w-full flex justify-center items-center py-4'>

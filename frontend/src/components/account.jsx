@@ -250,7 +250,7 @@ function Account() {
 					data && data.length !== 0 ? (data.map((item, key) => {
 						return (
 							<Card key={key} className='min-w-[350px] w-full md:max-w-[80%] bg-[#DDE6ED]'>
-								<CardContent className='flex flex-col-reverse md:flex-row justify-between items-center gap-2 pt-4'>
+								<CardContent className='flex md:flex-row justify-between items-center gap-2 pt-4'>
 									<div>
 										{/* <p> <span className='font-semibold'>Title</span>{item.title} </p> */}
 										<p> <span className='font-semibold'>Bank Name </span> {item.bank}</p>
