@@ -3,13 +3,18 @@ import { useEffect, useContext } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../lib/userContext'
+import { useToast } from '@/components/ui/use-toast'
 
 function Landing() {
 	const { user, setUser } = useContext(UserContext)
+	const { toast } = useToast()
 	// console.log(user)
 	const navigate = useNavigate()
 	useEffect(() => {
 		const getData = async () => {
+			toast({
+				title: 'Setting up...',
+			})
 			const apiUrl = import.meta.env.VITE_API_URL;
 			console.log(user)
 			try {
