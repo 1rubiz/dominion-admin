@@ -73,7 +73,7 @@ function Gallery() {
 		}
 
 		try {
-			const response = await axios.post(`${apiUrl}upload`, formData, {
+			const response = await axios.post(`${apiUrl}api/gallery/upload`, formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
 					Authorization: token
